@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { getDeviceInfo } from "../utils/deviceInfo";
 
-const API_URL = "https://univote-backend.onrender.com/api";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://localhost:5000/api";
 const TOKEN_KEY = "@univote_token";
 const FIRST_LOGIN_TOKEN_KEY = "@univote_first_login_token";
 

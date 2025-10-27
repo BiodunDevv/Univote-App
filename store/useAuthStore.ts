@@ -21,22 +21,15 @@ interface Student {
   first_login: boolean;
 }
 
-interface Admin {
-  id: string;
-  email: string;
-  full_name: string;
-  role: "admin" | "super_admin";
-}
-
 interface User {
   id: string;
   email: string;
   name: string;
-  role: "student" | "admin" | "super_admin";
-  matric_no?: string;
-  department?: string;
-  college?: string;
-  level?: string;
+  role: "student";
+  matric_no: string;
+  department: string;
+  college: string;
+  level: string;
 }
 
 interface AuthState {
@@ -48,8 +41,8 @@ interface AuthState {
 
   // Actions
   login: (matricNo: string, password: string) => Promise<void>;
-  adminLogin: (email: string, password: string) => Promise<void>;
   changePassword: (newPassword: string) => Promise<void>;
+  updatePassword: (oldPassword: string, newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   initialize: () => Promise<void>;
@@ -69,10 +62,32 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       if (token) {
         set({ token, isAuthenticated: true });
-        await get().fetchProfile();
+        try {
+          await get().fetchProfile();
+        } catch (error: any) {
+          // If it's a device changed error, show specific message
+          if (
+            error?.code === "DEVICE_CHANGED" ||
+            error?.message === "DEVICE_CHANGED"
+          ) {
+            // Clear auth state and show message
+            await AsyncStorage.removeItem(TOKEN_KEY);
+            await AsyncStorage.removeItem(FIRST_LOGIN_TOKEN_KEY);
+            set({
+              user: null,
+              token: null,
+              firstLoginToken: null,
+              isAuthenticated: false,
+            });
+            // Throw the specific error so it can be caught by the UI
+            throw new Error("DEVICE_CHANGED");
+          }
+          throw error;
+        }
       }
     } catch (error) {
       console.error("Initialize error:", error);
+      throw error;
     } finally {
       set({ isLoading: false });
     }
@@ -150,52 +165,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  adminLogin: async (email: string, password: string) => {
-    try {
-      set({ isLoading: true });
-
-      const response = await fetch(`${API_URL}/auth/admin-login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Admin login failed");
-      }
-
-      const token = data.token;
-      const admin: Admin = data.admin;
-
-      await AsyncStorage.setItem(TOKEN_KEY, token);
-
-      const user: User = {
-        id: admin.id,
-        email: admin.email,
-        name: admin.full_name,
-        role: admin.role,
-      };
-
-      set({
-        token,
-        user,
-        isAuthenticated: true,
-      });
-    } catch (error) {
-      set({ isLoading: false });
-      throw error;
-    } finally {
-      set({ isLoading: false });
-    }
-  },
-
   changePassword: async (newPassword: string) => {
     try {
       set({ isLoading: true });
@@ -243,6 +212,47 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
+  updatePassword: async (oldPassword: string, newPassword: string) => {
+    try {
+      set({ isLoading: true });
+      const token = get().token;
+
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await fetch(`${API_URL}/auth/update-password`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          old_password: oldPassword,
+          new_password: newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update password");
+      }
+
+      // Update token if backend returns a new one
+      if (data.token) {
+        const newToken = data.token;
+        await AsyncStorage.setItem(TOKEN_KEY, newToken);
+        set({ token: newToken });
+      }
+    } catch (error) {
+      set({ isLoading: false });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   fetchProfile: async () => {
     try {
       const token = get().token;
@@ -261,6 +271,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const data = await response.json();
 
       if (!response.ok) {
+        // Check if it's an authentication error (logged in on another device)
+        if (response.status === 401 || response.status === 403) {
+          const error: any = new Error("DEVICE_CHANGED");
+          error.code = "DEVICE_CHANGED";
+          throw error;
+        }
         throw new Error(data.error || "Failed to fetch profile");
       }
 

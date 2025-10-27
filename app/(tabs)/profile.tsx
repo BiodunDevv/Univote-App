@@ -93,8 +93,6 @@ export default function ProfileScreen() {
     );
   }
 
-  const isAdmin = user.role === "admin" || user.role === "super_admin";
-
   return (
     <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
       <StatusBar style="dark" />
@@ -131,107 +129,91 @@ export default function ProfileScreen() {
             <Text className="text-gray-600 text-base mb-3">{user.email}</Text>
             <View className="px-4 py-1.5 bg-gray-100 rounded-full">
               <Text className="text-gray-700 text-xs font-semibold uppercase tracking-wide">
-                {isAdmin ? user.role.replace("_", " ") : "Student"}
+                Student
               </Text>
             </View>
           </View>
         </View>
 
         {/* Student Information */}
-        {!isAdmin && (
-          <View className="bg-white mt-2 px-6 py-5">
-            <Text className="text-black text-lg font-bold mb-5">
-              Student Information
-            </Text>
+        <View className="bg-white mt-2 px-6 py-5">
+          <Text className="text-black text-lg font-bold mb-5">
+            Student Information
+          </Text>
 
-            <View className="space-y-4">
-              {/* Matric Number */}
-              <View className="flex-row items-center py-3.5 border-b border-gray-100">
-                <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
-                  <Ionicons name="card-outline" size={22} color="#000" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-gray-500 text-xs mb-1.5 font-medium">
-                    Matric Number
-                  </Text>
-                  <Text className="text-black text-base font-semibold">
-                    {user.matric_no || "N/A"}
-                  </Text>
-                </View>
+          <View className="space-y-4">
+            {/* Matric Number */}
+            <View className="flex-row items-center py-3.5 border-b border-gray-100">
+              <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
+                <Ionicons name="card-outline" size={22} color="#000" />
               </View>
-
-              {/* Department */}
-              <View className="flex-row items-center py-3.5 border-b border-gray-100">
-                <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
-                  <Ionicons name="school-outline" size={22} color="#000" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-gray-500 text-xs mb-1.5 font-medium">
-                    Department
-                  </Text>
-                  <Text className="text-black text-base font-semibold">
-                    {user.department || "N/A"}
-                  </Text>
-                </View>
+              <View className="flex-1">
+                <Text className="text-gray-500 text-xs mb-1.5 font-medium">
+                  Matric Number
+                </Text>
+                <Text className="text-black text-base font-semibold">
+                  {user.matric_no || "N/A"}
+                </Text>
               </View>
+            </View>
 
-              {/* College */}
-              <View className="flex-row items-center py-3.5 border-b border-gray-100">
-                <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
-                  <Ionicons name="business-outline" size={22} color="#000" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-gray-500 text-xs mb-1.5 font-medium">
-                    College
-                  </Text>
-                  <Text className="text-black text-base font-semibold">
-                    {user.college || "N/A"}
-                  </Text>
-                </View>
+            {/* Department */}
+            <View className="flex-row items-center py-3.5 border-b border-gray-100">
+              <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
+                <Ionicons name="school-outline" size={22} color="#000" />
               </View>
+              <View className="flex-1">
+                <Text className="text-gray-500 text-xs mb-1.5 font-medium">
+                  Department
+                </Text>
+                <Text className="text-black text-base font-semibold">
+                  {user.department || "N/A"}
+                </Text>
+              </View>
+            </View>
 
-              {/* Level */}
-              <View className="flex-row items-center py-3.5">
-                <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
-                  <Ionicons name="trophy-outline" size={22} color="#000" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-gray-500 text-xs mb-1.5 font-medium">
-                    Level
-                  </Text>
-                  <Text className="text-black text-base font-semibold">
-                    {user.level || "N/A"}
-                  </Text>
-                </View>
+            {/* College */}
+            <View className="flex-row items-center py-3.5 border-b border-gray-100">
+              <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
+                <Ionicons name="business-outline" size={22} color="#000" />
+              </View>
+              <View className="flex-1">
+                <Text className="text-gray-500 text-xs mb-1.5 font-medium">
+                  College
+                </Text>
+                <Text className="text-black text-base font-semibold">
+                  {user.college || "N/A"}
+                </Text>
+              </View>
+            </View>
+
+            {/* Level */}
+            <View className="flex-row items-center py-3.5">
+              <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
+                <Ionicons name="trophy-outline" size={22} color="#000" />
+              </View>
+              <View className="flex-1">
+                <Text className="text-gray-500 text-xs mb-1.5 font-medium">
+                  Level
+                </Text>
+                <Text className="text-black text-base font-semibold">
+                  {user.level || "N/A"}
+                </Text>
               </View>
             </View>
           </View>
-        )}
-
-        {/* Admin Dashboard Link */}
-        {isAdmin && (
-          <View className="bg-white mt-2 px-6 py-5">
-            <Text className="text-black text-lg font-bold mb-5">
-              Admin Tools
-            </Text>
-            <Pressable className="flex-row items-center py-4 bg-black rounded-xl px-5 shadow-sm active:opacity-80">
-              <Ionicons name="desktop-outline" size={24} color="white" />
-              <Text className="text-white text-base font-semibold ml-3 flex-1">
-                Open Web Dashboard
-              </Text>
-              <Ionicons name="arrow-forward" size={20} color="white" />
-            </Pressable>
-          </View>
-        )}
+        </View>
 
         {/* Account Settings */}
         <View className="bg-white mt-2 px-6 py-5">
           <Text className="text-black text-lg font-bold mb-5">
             Account Settings
           </Text>
-
           {/* Change Password */}
-          <Pressable className="flex-row items-center py-4 border-b border-gray-100 active:bg-gray-50">
+          <Pressable
+            onPress={() => router.push("/profile/update-password")}
+            className="flex-row items-center py-4 border-b border-gray-100 active:bg-gray-50"
+          >
             <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">
               <Ionicons name="lock-closed-outline" size={22} color="#000" />
             </View>
@@ -251,7 +233,6 @@ export default function ProfileScreen() {
             </Text>
             <Ionicons name="chevron-forward" size={22} color="#9CA3AF" />
           </Pressable>
-
           {/* Help & Support */}
           <Pressable className="flex-row items-center py-4 active:bg-gray-50">
             <View className="w-11 h-11 rounded-full bg-gray-100 items-center justify-center mr-3.5">

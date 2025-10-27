@@ -24,7 +24,24 @@ export default function RootLayout() {
   const initialize = useAuthStore((state) => state.initialize);
 
   useEffect(() => {
-    initialize();
+    const init = async () => {
+      try {
+        await initialize();
+      } catch (error: any) {
+        if (error?.message === "DEVICE_CHANGED") {
+          // Show toast notification for device change
+          setTimeout(() => {
+            Toast.show({
+              type: "error",
+              text1: "Session Expired",
+              text2: "You have been logged in on another device",
+              visibilityTime: 5000,
+            });
+          }, 1000);
+        }
+      }
+    };
+    init();
   }, [initialize]);
 
   return (
@@ -39,7 +56,6 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="welcome" />
         <Stack.Screen name="auth" />
-        <Stack.Screen name="current-user" />
         <Stack.Screen name="(tabs)" />
       </Stack>
       <StatusBar style="auto" />

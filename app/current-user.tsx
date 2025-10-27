@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Linking,
   Pressable,
   Text,
   View,
@@ -64,10 +63,6 @@ export default function CurrentUserScreen() {
     }
   };
 
-  const handleOpenWebsite = () => {
-    Linking.openURL("https://univote.space");
-  };
-
   const handleNavigateToDashboard = () => {
     router.push("/(tabs)");
   };
@@ -91,113 +86,6 @@ export default function CurrentUserScreen() {
 
   if (!isAuthenticated || !user) {
     return null;
-  }
-
-  // Admin user - show message to use website
-  if (user.role === "admin" || user.role === "super_admin") {
-    return (
-      <>
-        <SafeAreaView className="bg-white" edges={["top"]} />
-        <SafeAreaView className="flex-1 bg-white" edges={[]}>
-          <StatusBar style="dark" />
-          <View className="flex-1">
-            {/* Header */}
-            <View className="bg-white px-4 py-3 border-b border-gray-200">
-              <Text className="text-black text-lg font-semibold">
-                Admin Portal
-              </Text>
-            </View>
-
-            {/* Content */}
-            <View className="flex-1 px-6 pt-6 pb-6 justify-between">
-              <View>
-                {/* Profile Card */}
-                <View className="bg-white rounded-lg p-6 mb-6 items-center border border-gray-200">
-                  <View className="w-20 h-20 rounded-full bg-blue-500 items-center justify-center mb-4">
-                    <Ionicons name="shield-checkmark" size={36} color="white" />
-                  </View>
-                  <Text className="text-black text-xl font-bold mb-1">
-                    {user.name}
-                  </Text>
-                  <Text className="text-gray-600 text-sm mb-3">
-                    {user.email}
-                  </Text>
-                  <View className="bg-blue-50 rounded-full px-4 py-1.5 border border-blue-200">
-                    <Text className="text-blue-600 text-xs font-semibold">
-                      {user.role === "super_admin"
-                        ? "Super Administrator"
-                        : "Administrator"}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Info Banner */}
-                <View className="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-200">
-                  <View className="flex-row items-start">
-                    <Ionicons
-                      name="information-circle"
-                      size={20}
-                      color="#3B82F6"
-                      style={{ marginRight: 12, marginTop: 2 }}
-                    />
-                    <View className="flex-1">
-                      <Text className="text-blue-900 font-semibold text-sm mb-1">
-                        Mobile Access Limited
-                      </Text>
-                      <Text className="text-blue-700 text-xs leading-5">
-                        Full admin features are only available on the web
-                        platform. Please use a desktop browser for complete
-                        access to the dashboard.
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Action Buttons */}
-                <View className="gap-3">
-                  <Pressable
-                    onPress={handleOpenWebsite}
-                    className="bg-black rounded-lg py-3 px-6 flex-row items-center justify-center"
-                  >
-                    <Ionicons
-                      name="globe-outline"
-                      size={18}
-                      color="white"
-                      style={{ marginRight: 8 }}
-                    />
-                    <Text className="text-white font-semibold text-sm">
-                      Open Web Dashboard
-                    </Text>
-                  </Pressable>
-
-                  <Pressable
-                    onPress={confirmLogout}
-                    disabled={loggingOut}
-                    className={`rounded-lg py-3 px-6 flex-row items-center justify-center border ${
-                      loggingOut
-                        ? "bg-gray-100 border-gray-300"
-                        : "bg-white border-gray-300"
-                    }`}
-                  >
-                    {loggingOut && (
-                      <ActivityIndicator
-                        size="small"
-                        color="#111827"
-                        style={{ marginRight: 8 }}
-                      />
-                    )}
-                    <Text className="text-gray-900 font-semibold text-sm">
-                      {loggingOut ? "Logging out..." : "Log Out"}
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>
-          </View>
-        </SafeAreaView>
-        <SafeAreaView className="bg-black" edges={["bottom"]} />
-      </>
-    );
   }
 
   // Student user - show profile with dashboard access

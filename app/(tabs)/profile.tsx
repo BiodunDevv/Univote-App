@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -114,11 +115,18 @@ export default function ProfileScreen() {
         <View className="bg-white px-6 py-8 border-b border-gray-200">
           {/* Avatar */}
           <View className="items-center mb-5">
-            <View className="w-28 h-28 rounded-full bg-black items-center justify-center shadow-lg">
-              <Text className="text-white text-5xl font-bold">
-                {user.name.charAt(0).toUpperCase()}
-              </Text>
-            </View>
+            {user.photo_url ? (
+              <Image
+                source={{ uri: user.photo_url }}
+                className="w-28 h-28 rounded-full shadow-lg"
+              />
+            ) : (
+              <View className="w-28 h-28 rounded-full bg-black items-center justify-center shadow-lg">
+                <Text className="text-white text-5xl font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </Text>
+              </View>
+            )}
           </View>
 
           {/* Name and Email */}

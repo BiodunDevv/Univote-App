@@ -36,6 +36,19 @@
           "backgroundColor": "#ffffff",
           "hideAsync": true
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to verify your identity for voting."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to verify you are at the correct voting location.",
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to verify you are at the correct voting location."
+        }
       ]
     ],
     "experiments": {

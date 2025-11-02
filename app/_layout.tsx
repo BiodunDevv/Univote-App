@@ -49,6 +49,7 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          gestureEnabled: false,
           animation: "slide_from_right",
         }}
       >
@@ -56,7 +57,8 @@ export default function RootLayout() {
         <Stack.Screen name="welcome" />
         <Stack.Screen name="auth" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="current-user" options={{ gestureEnabled: false }} />
+        <Stack.Screen name="voting" />
+        <Stack.Screen name="profile/update-password" />
       </Stack>
       <StatusBar style="auto" />
       <Toast config={toastConfig} />

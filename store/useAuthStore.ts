@@ -12,12 +12,16 @@ interface Student {
   full_name: string;
   email: string;
   department: string;
+  department_code: string;
   college: string;
   level: string;
+  photo_url: string;
+  has_facial_data: boolean;
   has_voted_sessions: string[];
   is_logged_in: boolean;
   last_login_device: string;
   last_login_at: string;
+  created_at: string;
   first_login: boolean;
 }
 
@@ -28,8 +32,13 @@ interface User {
   role: "student";
   matric_no: string;
   department: string;
+  department_code: string;
   college: string;
   level: string;
+  photo_url: string;
+  has_facial_data: boolean;
+  created_at: string;
+  last_login_at: string;
 }
 
 interface AuthState {
@@ -140,8 +149,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         role: "student",
         matric_no: student.matric_no,
         department: student.department,
+        department_code: student.department_code,
         college: student.college,
         level: student.level,
+        photo_url: student.photo_url,
+        has_facial_data: student.has_facial_data,
+        created_at: student.created_at,
+        last_login_at: student.last_login_at,
       };
 
       set({
@@ -280,7 +294,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         throw new Error(data.error || "Failed to fetch profile");
       }
 
-      const student: Student = data.student;
+      const student: Student = data.student || data.profile;
 
       const user: User = {
         id: student.id || (student as any)._id,
@@ -289,8 +303,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         role: "student",
         matric_no: student.matric_no,
         department: student.department,
+        department_code: student.department_code,
         college: student.college,
         level: student.level,
+        photo_url: student.photo_url,
+        has_facial_data: student.has_facial_data,
+        created_at: student.created_at,
+        last_login_at: student.last_login_at,
       };
 
       set({ user });
